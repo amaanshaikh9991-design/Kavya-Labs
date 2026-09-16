@@ -733,3 +733,13 @@ tr:last-child td {
     padding: 0 12px 30px;
   }
 }
+
+.admin-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00060f;
+  color: #ffffff;
+  font-size: 14px;
+}

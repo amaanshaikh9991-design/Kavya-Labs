@@ -93,10 +93,8 @@ export function AdminDashboard() {
 
   return (
     <div className="admin-layout">
-
       {/* SIDEBAR */}
       <aside className="admin-sidebar">
-
         <Link to="/" className="admin-brand">
           <span className="logo-mark">K</span>
           <span>Kavya Labs</span>
@@ -118,7 +116,6 @@ export function AdminDashboard() {
         </div>
 
         <nav className="admin-nav">
-
           <span className="admin-nav-label">
             CONTROL CENTER
           </span>
@@ -140,7 +137,9 @@ export function AdminDashboard() {
           </button>
 
           <button
-            className={activePage === "Transactions" ? "active" : ""}
+            className={
+              activePage === "Transactions" ? "active" : ""
+            }
             onClick={() => setActivePage("Transactions")}
           >
             <span>⇄</span>
@@ -176,13 +175,10 @@ export function AdminDashboard() {
             <span>↪</span>
             Sign Out
           </Link>
-
         </nav>
 
         <div className="admin-sidebar-footer">
-
           <div className="admin-profile">
-
             <div className="profile-avatar">
               RM
             </div>
@@ -193,21 +189,14 @@ export function AdminDashboard() {
             </div>
 
             <span>•••</span>
-
           </div>
-
         </div>
-
       </aside>
-
 
       {/* MAIN */}
       <main className="admin-main">
-
         <header className="admin-header">
-
           <div>
-
             <span className="admin-breadcrumb">
               CONTROL CENTER / {activePage.toUpperCase()}
             </span>
@@ -217,11 +206,9 @@ export function AdminDashboard() {
             <p>
               Monitor and manage your Kavya Labs environment.
             </p>
-
           </div>
 
           <div className="admin-header-actions">
-
             <button className="icon-button">
               ⌕
             </button>
@@ -233,17 +220,12 @@ export function AdminDashboard() {
             <div className="header-avatar">
               RM
             </div>
-
           </div>
-
         </header>
-
 
         {/* KPI CARDS */}
         <section className="stats-grid">
-
           <div className="stat-card">
-
             <div className="stat-top">
               <span>Total Users</span>
               <span className="stat-icon">◉</span>
@@ -252,15 +234,15 @@ export function AdminDashboard() {
             <strong>12,842</strong>
 
             <div className="stat-bottom">
-              <span className="positive">+12.8%</span>
+              <span className="positive">
+                +12.8%
+              </span>
+
               <span>vs last month</span>
             </div>
-
           </div>
 
-
           <div className="stat-card">
-
             <div className="stat-top">
               <span>Transactions</span>
               <span className="stat-icon">⇄</span>
@@ -269,17 +251,18 @@ export function AdminDashboard() {
             <strong>84,291</strong>
 
             <div className="stat-bottom">
-              <span className="positive">+18.4%</span>
+              <span className="positive">
+                +18.4%
+              </span>
+
               <span>vs last month</span>
             </div>
-
           </div>
 
-
           <div className="stat-card">
-
             <div className="stat-top">
               <span>Flagged Activity</span>
+
               <span className="stat-icon warning-icon">
                 !
               </span>
@@ -288,17 +271,18 @@ export function AdminDashboard() {
             <strong>124</strong>
 
             <div className="stat-bottom">
-              <span className="warning-text">+4.2%</span>
+              <span className="warning-text">
+                +4.2%
+              </span>
+
               <span>requires review</span>
             </div>
-
           </div>
 
-
           <div className="stat-card">
-
             <div className="stat-top">
               <span>System Health</span>
+
               <span className="stat-icon health-icon">
                 ✓
               </span>
@@ -307,34 +291,38 @@ export function AdminDashboard() {
             <strong>99.9%</strong>
 
             <div className="stat-bottom">
-              <span className="positive">Healthy</span>
+              <span className="positive">
+                Healthy
+              </span>
+
               <span>all systems operational</span>
             </div>
-
           </div>
-
         </section>
-
 
         {/* MAIN GRID */}
         <section className="admin-content-grid">
-
           {/* ACTIVITY */}
           <div className="admin-panel activity-chart-panel">
-
             <div className="panel-header">
-
               <div>
                 <span>ACTIVITY</span>
                 <h2>System activity</h2>
               </div>
 
               <select defaultValue="7">
-                <option value="7">Last 7 days</option>
-                <option value="30">Last 30 days</option>
-                <option value="90">Last 90 days</option>
-              </select>
+                <option value="7">
+                  Last 7 days
+                </option>
 
+                <option value="30">
+                  Last 30 days
+                </option>
+
+                <option value="90">
+                  Last 90 days
+                </option>
+              </select>
             </div>
 
             <div className="big-number">
@@ -343,11 +331,9 @@ export function AdminDashboard() {
             </div>
 
             <div className="chart">
-
               <div className="chart-grid"></div>
 
               <div className="chart-line">
-
                 <span style={{ left: "0%", bottom: "20%" }}></span>
                 <span style={{ left: "8%", bottom: "32%" }}></span>
                 <span style={{ left: "16%", bottom: "27%" }}></span>
@@ -360,11 +346,9 @@ export function AdminDashboard() {
                 <span style={{ left: "79%", bottom: "82%" }}></span>
                 <span style={{ left: "88%", bottom: "77%" }}></span>
                 <span style={{ left: "98%", bottom: "91%" }}></span>
-
               </div>
 
               <div className="chart-bars">
-
                 <i style={{ height: "28%" }}></i>
                 <i style={{ height: "42%" }}></i>
                 <i style={{ height: "35%" }}></i>
@@ -377,19 +361,13 @@ export function AdminDashboard() {
                 <i style={{ height: "86%" }}></i>
                 <i style={{ height: "81%" }}></i>
                 <i style={{ height: "93%" }}></i>
-
               </div>
-
             </div>
-
           </div>
-
 
           {/* SYSTEM HEALTH */}
           <div className="admin-panel health-panel">
-
             <div className="panel-header">
-
               <div>
                 <span>SYSTEM</span>
                 <h2>Health</h2>
@@ -398,7 +376,6 @@ export function AdminDashboard() {
               <span className="healthy-badge">
                 ● Operational
               </span>
-
             </div>
 
             <div className="health-score">
@@ -407,12 +384,12 @@ export function AdminDashboard() {
             </div>
 
             <div className="health-list">
-
               <div>
                 <span>
                   <i className="status-dot"></i>
                   API
                 </span>
+
                 <strong>99.99%</strong>
               </div>
 
@@ -421,6 +398,7 @@ export function AdminDashboard() {
                   <i className="status-dot"></i>
                   Database
                 </span>
+
                 <strong>99.98%</strong>
               </div>
 
@@ -429,6 +407,7 @@ export function AdminDashboard() {
                   <i className="status-dot"></i>
                   AI Engine
                 </span>
+
                 <strong>99.94%</strong>
               </div>
 
@@ -437,21 +416,16 @@ export function AdminDashboard() {
                   <i className="status-dot"></i>
                   Storage
                 </span>
+
                 <strong>100%</strong>
               </div>
-
             </div>
-
           </div>
-
         </section>
-
 
         {/* RECENT TRANSACTIONS */}
         <section className="admin-panel raw-data-panel">
-
           <div className="panel-header">
-
             <div>
               <span>RAW DATA</span>
               <h2>Recent transactions</h2>
@@ -460,13 +434,10 @@ export function AdminDashboard() {
             <button className="table-button">
               View all →
             </button>
-
           </div>
 
           <div className="table-wrapper">
-
             <table>
-
               <thead>
                 <tr>
                   <th>TRANSACTION ID</th>
@@ -479,10 +450,8 @@ export function AdminDashboard() {
               </thead>
 
               <tbody>
-
                 {transactions.map((transaction) => (
                   <tr key={transaction.id}>
-
                     <td className="mono">
                       {transaction.id}
                     </td>
@@ -500,7 +469,6 @@ export function AdminDashboard() {
                     </td>
 
                     <td>
-
                       <span
                         className={`table-status ${transaction.status
                           .toLowerCase()
@@ -508,30 +476,21 @@ export function AdminDashboard() {
                       >
                         {transaction.status}
                       </span>
-
                     </td>
 
                     <td className="muted">
                       {transaction.time}
                     </td>
-
                   </tr>
                 ))}
-
               </tbody>
-
             </table>
-
           </div>
-
         </section>
-
 
         {/* USERS */}
         <section className="admin-panel raw-data-panel">
-
           <div className="panel-header">
-
             <div>
               <span>USER DIRECTORY</span>
               <h2>Recent users</h2>
@@ -540,13 +499,10 @@ export function AdminDashboard() {
             <button className="table-button">
               Manage users →
             </button>
-
           </div>
 
           <div className="table-wrapper">
-
             <table>
-
               <thead>
                 <tr>
                   <th>ID</th>
@@ -559,10 +515,8 @@ export function AdminDashboard() {
               </thead>
 
               <tbody>
-
                 {users.map((user) => (
                   <tr key={user.id}>
-
                     <td className="mono">
                       {user.id}
                     </td>
@@ -580,7 +534,6 @@ export function AdminDashboard() {
                     </td>
 
                     <td>
-
                       <span
                         className={`user-status ${
                           user.status === "Active"
@@ -590,26 +543,18 @@ export function AdminDashboard() {
                       >
                         ● {user.status}
                       </span>
-
                     </td>
 
                     <td className="muted">
                       {user.joined}
                     </td>
-
                   </tr>
                 ))}
-
               </tbody>
-
             </table>
-
           </div>
-
         </section>
-
       </main>
-
     </div>
   );
 }
