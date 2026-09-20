@@ -10,6 +10,7 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(event) {
@@ -43,6 +44,28 @@ export function LoginPage() {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    setError("");
+
+    try {
+      setGoogleLoading(true);
+
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/admin",
+      });
+
+      if (error) {
+        setError(error.message || "Google sign-in failed.");
+        setGoogleLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong with Google sign-in.");
+      setGoogleLoading(false);
     }
   }
 
@@ -118,13 +141,26 @@ export function LoginPage() {
             <button
               type="submit"
               className="auth-button"
-              disabled={loading}
+              disabled={loading || googleLoading}
             >
               {loading ? "Signing In..." : "Sign In"}
 
               {!loading && <span>→</span>}
             </button>
           </form>
+
+          <button
+            type="button"
+            className="google-auth-button"
+            onClick={handleGoogleSignIn}
+            disabled={loading || googleLoading}
+          >
+            <span className="google-icon">G</span>
+
+            {googleLoading
+              ? "Connecting..."
+              : "Continue with Google"}
+          </button>
 
           <div className="auth-divider">
             <span>NEW TO KAVYA LABS?</span>
