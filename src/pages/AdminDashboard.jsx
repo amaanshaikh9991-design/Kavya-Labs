@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authClient } from "../auth.js";
 import "../styles/admin.css";
@@ -94,6 +94,12 @@ export function AdminDashboard() {
 
   const [activePage, setActivePage] = useState("Overview");
 
+  // TASK STATE
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  const [loadingTasks, setLoadingTasks] = useState(true);
+  const [taskError, setTaskError] = useState("");
+
   async function handleSignOut() {
     try {
       const { error } = await authClient.signOut();
@@ -109,6 +115,151 @@ export function AdminDashboard() {
     }
   }
 
+  // GET TASKS
+  useEffect(() => {
+    async function fetchTasks() {
+      try {
+        setLoadingTasks(true);
+        setTaskError("");
+
+        const response = await fetch(
+          "http://localhost:5000/api/tasks"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch tasks");
+        }
+
+        const data = await response.json();
+
+        setTasks(data);
+      } catch (error) {
+        console.error("Fetch tasks error:", error);
+        setTaskError("Could not load tasks.");
+      } finally {
+        setLoadingTasks(false);
+      }
+    }
+
+    fetchTasks();
+  }, []);
+
+  // CREATE TASK
+  async function handleCreateTask(event) {
+    event.preventDefault();
+
+    if (!newTask.trim()) {
+      return;
+    }
+
+    try {
+      setTaskError("");
+
+      const response = await fetch(
+        "http://localhost:5000/api/tasks",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: newTask,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create task");
+      }
+
+      const createdTask = await response.json();
+
+      setTasks((currentTasks) => [
+        createdTask,
+        ...currentTasks,
+      ]);
+
+      setNewTask("");
+    } catch (error) {
+      console.error("Create task error:", error);
+      setTaskError("Could not create task.");
+    }
+  }
+
+  // TOGGLE TASK
+  async function handleToggleTask(task) {
+    try {
+      setTaskError("");
+
+      const response = await fetch(
+        `http://localhost:5000/api/tasks/${task.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            completed: !task.completed,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update task");
+      }
+
+      const updatedTask = await response.json();
+
+      setTasks((currentTasks) =>
+        currentTasks.map((currentTask) =>
+          currentTask.id === updatedTask.id
+            ? updatedTask
+            : currentTask
+        )
+      );
+    } catch (error) {
+      console.error("Toggle task error:", error);
+      setTaskError("Could not update task.");
+    }
+  }
+
+  // DELETE TASK
+  async function handleDeleteTask(id) {
+    try {
+      setTaskError("");
+
+      const response = await fetch(
+        `http://localhost:5000/api/tasks/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete task");
+      }
+
+      setTasks((currentTasks) =>
+        currentTasks.filter(
+          (task) => task.id !== id
+        )
+      );
+    } catch (error) {
+      console.error("Delete task error:", error);
+      setTaskError("Could not delete task.");
+    }
+  }
+
+  // TASK STATISTICS
+  const totalTasks = tasks.length;
+
+  const completedTasks = tasks.filter(
+    (task) => task.completed
+  ).length;
+
+  const pendingTasks =
+    totalTasks - completedTasks;
+
   return (
     <div className="admin-layout">
       {/* SIDEBAR */}
@@ -122,7 +273,9 @@ export function AdminDashboard() {
           <span>WORKSPACE</span>
 
           <div className="workspace-box">
-            <div className="workspace-avatar">KL</div>
+            <div className="workspace-avatar">
+              KL
+            </div>
 
             <div>
               <strong>Kavya Labs</strong>
@@ -139,16 +292,28 @@ export function AdminDashboard() {
           </span>
 
           <button
-            className={activePage === "Overview" ? "active" : ""}
-            onClick={() => setActivePage("Overview")}
+            className={
+              activePage === "Overview"
+                ? "active"
+                : ""
+            }
+            onClick={() =>
+              setActivePage("Overview")
+            }
           >
             <span>▦</span>
             Overview
           </button>
 
           <button
-            className={activePage === "Users" ? "active" : ""}
-            onClick={() => setActivePage("Users")}
+            className={
+              activePage === "Users"
+                ? "active"
+                : ""
+            }
+            onClick={() =>
+              setActivePage("Users")
+            }
           >
             <span>◉</span>
             Users
@@ -156,25 +321,41 @@ export function AdminDashboard() {
 
           <button
             className={
-              activePage === "Transactions" ? "active" : ""
+              activePage === "Transactions"
+                ? "active"
+                : ""
             }
-            onClick={() => setActivePage("Transactions")}
+            onClick={() =>
+              setActivePage("Transactions")
+            }
           >
             <span>⇄</span>
             Transactions
           </button>
 
           <button
-            className={activePage === "Analytics" ? "active" : ""}
-            onClick={() => setActivePage("Analytics")}
+            className={
+              activePage === "Analytics"
+                ? "active"
+                : ""
+            }
+            onClick={() =>
+              setActivePage("Analytics")
+            }
           >
             <span>◌</span>
             Analytics
           </button>
 
           <button
-            className={activePage === "System" ? "active" : ""}
-            onClick={() => setActivePage("System")}
+            className={
+              activePage === "System"
+                ? "active"
+                : ""
+            }
+            onClick={() =>
+              setActivePage("System")
+            }
           >
             <span>⚙</span>
             System
@@ -189,7 +370,10 @@ export function AdminDashboard() {
             Settings
           </button>
 
-          <button type="button" onClick={handleSignOut}>
+          <button
+            type="button"
+            onClick={handleSignOut}
+          >
             <span>↪</span>
             Sign Out
           </button>
@@ -216,13 +400,15 @@ export function AdminDashboard() {
         <header className="admin-header">
           <div>
             <span className="admin-breadcrumb">
-              CONTROL CENTER / {activePage.toUpperCase()}
+              CONTROL CENTER /{" "}
+              {activePage.toUpperCase()}
             </span>
 
             <h1>{activePage}</h1>
 
             <p>
-              Monitor and manage your Kavya Labs environment.
+              Monitor and manage your Kavya Labs
+              environment.
             </p>
           </div>
 
@@ -246,7 +432,9 @@ export function AdminDashboard() {
           <div className="stat-card">
             <div className="stat-top">
               <span>Total Users</span>
-              <span className="stat-icon">◉</span>
+              <span className="stat-icon">
+                ◉
+              </span>
             </div>
 
             <strong>12,842</strong>
@@ -263,7 +451,9 @@ export function AdminDashboard() {
           <div className="stat-card">
             <div className="stat-top">
               <span>Transactions</span>
-              <span className="stat-icon">⇄</span>
+              <span className="stat-icon">
+                ⇄
+              </span>
             </div>
 
             <strong>84,291</strong>
@@ -313,7 +503,9 @@ export function AdminDashboard() {
                 Healthy
               </span>
 
-              <span>all systems operational</span>
+              <span>
+                all systems operational
+              </span>
             </div>
           </div>
         </section>
@@ -352,18 +544,89 @@ export function AdminDashboard() {
               <div className="chart-grid"></div>
 
               <div className="chart-line">
-                <span style={{ left: "0%", bottom: "20%" }}></span>
-                <span style={{ left: "8%", bottom: "32%" }}></span>
-                <span style={{ left: "16%", bottom: "27%" }}></span>
-                <span style={{ left: "25%", bottom: "45%" }}></span>
-                <span style={{ left: "34%", bottom: "42%" }}></span>
-                <span style={{ left: "43%", bottom: "61%" }}></span>
-                <span style={{ left: "52%", bottom: "55%" }}></span>
-                <span style={{ left: "61%", bottom: "73%" }}></span>
-                <span style={{ left: "70%", bottom: "68%" }}></span>
-                <span style={{ left: "79%", bottom: "82%" }}></span>
-                <span style={{ left: "88%", bottom: "77%" }}></span>
-                <span style={{ left: "98%", bottom: "91%" }}></span>
+                <span
+                  style={{
+                    left: "0%",
+                    bottom: "20%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "8%",
+                    bottom: "32%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "16%",
+                    bottom: "27%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "25%",
+                    bottom: "45%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "34%",
+                    bottom: "42%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "43%",
+                    bottom: "61%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "52%",
+                    bottom: "55%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "61%",
+                    bottom: "73%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "70%",
+                    bottom: "68%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "79%",
+                    bottom: "82%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "88%",
+                    bottom: "77%",
+                  }}
+                ></span>
+
+                <span
+                  style={{
+                    left: "98%",
+                    bottom: "91%",
+                  }}
+                ></span>
               </div>
 
               <div className="chart-bars">
@@ -441,6 +704,112 @@ export function AdminDashboard() {
           </div>
         </section>
 
+        {/* TASK MANAGEMENT */}
+        <section className="admin-panel task-panel">
+          <div className="panel-header">
+            <div>
+              <span>WORK MANAGEMENT</span>
+              <h2>Tasks</h2>
+            </div>
+          </div>
+
+          {/* TASK STATS */}
+          <div className="task-stats">
+            <div className="task-stat">
+              <span>Total</span>
+              <strong>{totalTasks}</strong>
+            </div>
+
+            <div className="task-stat">
+              <span>Completed</span>
+              <strong>{completedTasks}</strong>
+            </div>
+
+            <div className="task-stat">
+              <span>Pending</span>
+              <strong>{pendingTasks}</strong>
+            </div>
+          </div>
+
+          {/* CREATE TASK */}
+          <form
+            className="task-form"
+            onSubmit={handleCreateTask}
+          >
+            <input
+              type="text"
+              value={newTask}
+              onChange={(event) =>
+                setNewTask(event.target.value)
+              }
+              placeholder="Enter a new task..."
+            />
+
+            <button type="submit">
+              Add Task
+            </button>
+          </form>
+
+          {taskError && (
+            <p className="task-error">
+              {taskError}
+            </p>
+          )}
+
+          {/* TASK LIST */}
+          <div className="task-list">
+            {loadingTasks ? (
+              <p className="task-empty">
+                Loading tasks...
+              </p>
+            ) : tasks.length === 0 ? (
+              <p className="task-empty">
+                No tasks yet. Create your first task.
+              </p>
+            ) : (
+              tasks.map((task) => (
+                <div
+                  className={`task-item ${
+                    task.completed
+                      ? "task-completed"
+                      : ""
+                  }`}
+                  key={task.id}
+                >
+                  <button
+                    type="button"
+                    className="task-check"
+                    onClick={() =>
+                      handleToggleTask(task)
+                    }
+                    aria-label={
+                      task.completed
+                        ? "Mark task as pending"
+                        : "Mark task as completed"
+                    }
+                  >
+                    {task.completed ? "✓" : ""}
+                  </button>
+
+                  <span className="task-title">
+                    {task.title}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="task-delete"
+                    onClick={() =>
+                      handleDeleteTask(task.id)
+                    }
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
         {/* RECENT TRANSACTIONS */}
         <section className="admin-panel raw-data-panel">
           <div className="panel-header">
@@ -468,39 +837,41 @@ export function AdminDashboard() {
               </thead>
 
               <tbody>
-                {transactions.map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td className="mono">
-                      {transaction.id}
-                    </td>
+                {transactions.map(
+                  (transaction) => (
+                    <tr key={transaction.id}>
+                      <td className="mono">
+                        {transaction.id}
+                      </td>
 
-                    <td>
-                      {transaction.user}
-                    </td>
+                      <td>
+                        {transaction.user}
+                      </td>
 
-                    <td className="amount">
-                      {transaction.amount}
-                    </td>
+                      <td className="amount">
+                        {transaction.amount}
+                      </td>
 
-                    <td>
-                      {transaction.type}
-                    </td>
+                      <td>
+                        {transaction.type}
+                      </td>
 
-                    <td>
-                      <span
-                        className={`table-status ${transaction.status
-                          .toLowerCase()
-                          .replace(" ", "-")}`}
-                      >
-                        {transaction.status}
-                      </span>
-                    </td>
+                      <td>
+                        <span
+                          className={`table-status ${transaction.status
+                            .toLowerCase()
+                            .replace(" ", "-")}`}
+                        >
+                          {transaction.status}
+                        </span>
+                      </td>
 
-                    <td className="muted">
-                      {transaction.time}
-                    </td>
-                  </tr>
-                ))}
+                      <td className="muted">
+                        {transaction.time}
+                      </td>
+                    </tr>
+                  )
+                )}
               </tbody>
             </table>
           </div>
@@ -575,4 +946,4 @@ export function AdminDashboard() {
       </main>
     </div>
   );
-} 
+}

@@ -743,3 +743,154 @@ tr:last-child td {
   color: #ffffff;
   font-size: 14px;
 }
+
+/* TASK MANAGEMENT */
+
+.task-panel {
+  margin-top: 24px;
+}
+
+.task-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.task-stat {
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+}
+
+.task-stat span {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.task-stat strong {
+  font-size: 24px;
+}
+
+.task-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-form input {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.task-form input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.task-form input:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.task-form button {
+  height: 46px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 6px;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+}
+
+.task-error {
+  margin: 0 0 16px;
+  color: #ff6b6b;
+  font-size: 13px;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.task-check {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  background: transparent;
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.task-completed .task-check {
+  background: #fff;
+  border-color: #fff;
+}
+
+.task-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+.task-completed .task-title {
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: line-through;
+}
+
+.task-delete {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+}
+
+.task-delete:hover {
+  color: #fff;
+}
+
+.task-empty {
+  padding: 20px 0;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .task-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .task-form {
+    flex-direction: column;
+  }
+
+  .task-form button {
+    width: 100%;
+  }
+}
