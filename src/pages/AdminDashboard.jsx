@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { authClient } from "../auth.js";
 import "../styles/admin.css";
 
 const users = [
@@ -89,7 +90,24 @@ const transactions = [
 ];
 
 export function AdminDashboard() {
+  const navigate = useNavigate();
+
   const [activePage, setActivePage] = useState("Overview");
+
+  async function handleSignOut() {
+    try {
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        console.error("Sign out error:", error);
+        return;
+      }
+
+      navigate("/login");
+    } catch (err) {
+      console.error("Sign out error:", err);
+    }
+  }
 
   return (
     <div className="admin-layout">
@@ -171,10 +189,10 @@ export function AdminDashboard() {
             Settings
           </button>
 
-          <Link to="/">
+          <button type="button" onClick={handleSignOut}>
             <span>↪</span>
             Sign Out
-          </Link>
+          </button>
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -557,4 +575,4 @@ export function AdminDashboard() {
       </main>
     </div>
   );
-}
+} 
